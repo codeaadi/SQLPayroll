@@ -1,0 +1,437 @@
+Microsoft Windows [Version 10.0.22621.1265]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\Aditya>mysql -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.32 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| payroll_service    |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> use payroll_service;
+Database changed
+mysql> create Table employee_payroll(Id int AUTO_INCREMENT,Name VARCHAR(20),Salary DOUBLE(10,3),StartDate DATE,PRIMARY KEY(Id));
+Query OK, 0 rows affected, 1 warning (0.05 sec)
+
+mysql> desc employee_payroll;
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| Id        | int          | NO   | PRI | NULL    | auto_increment |
+| Name      | varchar(20)  | YES  |     | NULL    |                |
+| Salary    | double(10,3) | YES  |     | NULL    |                |
+| StartDate | date         | YES  |     | NULL    |                |
++-----------+--------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+mysql> INSERT INTO employee_payroll(Name,Salary,StartDate)Values ('Rahul'.240000.000,'2019-4-2'),('Sanjay',650000.00,'2020-7-8',('Vikas',1000000.00,'2020-1-2'))
+    -> INSERT INTO employee_payroll(Name,Salary,StartDate)Values ('Rahul'.240000.000,'2019-4-2'),('Sanjay',650000.00,'2020-7-8'),('Vikas',1000000.00,'2020-1-2'))
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.240000.000,'2019-4-2'),('Sanjay',650000.00,'2020-7-8',('Vikas',1000000.00,'2020' at line 1
+mysql> INSERT INTO employee_payroll(Name,Salary,StartDate)Values ('Rahul'.240000.00,'2019-4-2'),('Sanjay',650000.00,'2020-7-8'),('Vikas',1000000.00,'2020-1-2')));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.240000.00,'2019-4-2'),('Sanjay',650000.00,'2020-7-8'),('Vikas',1000000.00,'2020' at line 1
+mysql> INSERT INTO employee_payroll(Name,Salary,StartDate)Values ('Rahul'240000.00,'2019-4-2'),('Sanjay',650000.00,'2020-7-8'),('Vikas',1000000.00,'2020-1-2')));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '240000.00,'2019-4-2'),('Sanjay',650000.00,'2020-7-8'),('Vikas',1000000.00,'2020-' at line 1
+mysql> INSERT INTO employee_payroll(Name, Salary, StartDate)Values ('Sneha', 200000.00, '2021-03-19'),('Nagar', 300000.00, '2020-06-26'), ('Amit', 300000.00, '2019-07-26');
+Query OK, 3 rows affected (0.02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select AVG(salary) from employee_payroll where gender = 'M' group by
+gender;
+ERROR 1054 (42S22): Unknown column 'gender' in 'where clause'
+mysql> desc employee_payroll;
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| Id        | int          | NO   | PRI | NULL    | auto_increment |
+| Name      | varchar(20)  | YES  |     | NULL    |                |
+| Salary    | double(10,3) | YES  |     | NULL    |                |
+| StartDate | date         | YES  |     | NULL    |                |
++-----------+--------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> alter table employee_payroll add column gender varchar(20);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc employee_payroll;
++-----------+--------------+------+-----+---------+----------------+
+| Field     | Type         | Null | Key | Default | Extra          |
++-----------+--------------+------+-----+---------+----------------+
+| Id        | int          | NO   | PRI | NULL    | auto_increment |
+| Name      | varchar(20)  | YES  |     | NULL    |                |
+| Salary    | double(10,3) | YES  |     | NULL    |                |
+| StartDate | date         | YES  |     | NULL    |                |
+| gender    | varchar(20)  | YES  |     | NULL    |                |
++-----------+--------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO employee_payroll(Name, Salary, StartDate)Values ('Sneha', 200000.00, '2021-03-19','F'),('Nagar', 300000.00, '2020-06-26','M'), ('Amit', 300000.00, '2019-07-26','M');
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> INSERT INTO employee_payroll(Name, Salary, StartDate,gender)Values ('Sneha', 200000.00, '2021-03-19','F'),('Nagar', 300000.00, '2020-06-26','M'), ('Amit', 300000.00, '2019-07-26','M');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select AVG(salary) from employee_payroll where gender = 'M' group by gender;
++----------------+
+| AVG(salary)    |
++----------------+
+| 300000.0000000 |
++----------------+
+1 row in set (0.01 sec)
+
+mysql> select AVG(salary) from employee_payroll group by gender;
++----------------+
+| AVG(salary)    |
++----------------+
+| 266666.6666667 |
+| 200000.0000000 |
+| 300000.0000000 |
++----------------+
+3 rows in set (0.01 sec)
+
+mysql> select gender,COUNT(salary) from employee_payroll group by gender;
++--------+---------------+
+| gender | COUNT(salary) |
++--------+---------------+
+| NULL   |             3 |
+| F      |             1 |
+| M      |             2 |
++--------+---------------+
+3 rows in set (0.01 sec)
+
+mysql> select gender,SUM(salary) from employee_payroll group by gender;
++--------+-------------+
+| gender | SUM(salary) |
++--------+-------------+
+| NULL   |  800000.000 |
+| F      |  200000.000 |
+| M      |  600000.000 |
++--------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select gender, MIN(salary) from employee_payroll group by gender;
++--------+-------------+
+| gender | MIN(salary) |
++--------+-------------+
+| NULL   |  200000.000 |
+| F      |  200000.000 |
+| M      |  300000.000 |
++--------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select gender, MAX(salary) from employee_payroll group by gender;
++--------+-------------+
+| gender | MAX(salary) |
++--------+-------------+
+| NULL   |  300000.000 |
+| F      |  200000.000 |
+| M      |  300000.000 |
++--------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select gender, sum(salary) from employee_payroll where gender='M' group by gender;
++--------+-------------+
+| gender | sum(salary) |
++--------+-------------+
+| M      |  600000.000 |
++--------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(salary) from emplpoyee_payroll where gender='M' group by gender;
+ERROR 1146 (42S02): Table 'payroll_service.emplpoyee_payroll' doesn't exist
+mysql> select gender, avg(salary) from employee_payroll where gender='M' group by gender;
++--------+----------------+
+| gender | avg(salary)    |
++--------+----------------+
+| M      | 300000.0000000 |
++--------+----------------+
+1 row in set (0.01 sec)
+
+mysql> select gender, max(salary) from employee_payroll where gender='M' group by gender;
++--------+-------------+
+| gender | max(salary) |
++--------+-------------+
+| M      |  300000.000 |
++--------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select gender, count(salary) from employee_payroll where gender='M' group by gender;
++--------+---------------+
+| gender | count(salary) |
++--------+---------------+
+| M      |             2 |
++--------+---------------+
+1 row in set (0.00 sec)
+
+mysql> select gender, sum(salary) from employee_payroll where gender='F' group by gender;
++--------+-------------+
+| gender | sum(salary) |
++--------+-------------+
+| F      |  200000.000 |
++--------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select gender, avg(salary) from employee_payroll where gender='F' group by gender;
++--------+----------------+
+| gender | avg(salary)    |
++--------+----------------+
+| F      | 200000.0000000 |
++--------+----------------+
+1 row in set (0.00 sec)
+
+mysql> select gender, min(salary) from employee_payroll where gender='F' group by gender;
++--------+-------------+
+| gender | min(salary) |
++--------+-------------+
+| F      |  200000.000 |
++--------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select gender, max(salary) from employee_payroll where gender='F' group by gender;
++--------+-------------+
+| gender | max(salary) |
++--------+-------------+
+| F      |  200000.000 |
++--------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select gender,count(salary) from employee_payroll where gender='F' group by gender;
++--------+---------------+
+| gender | count(salary) |
++--------+---------------+
+| F      |             1 |
++--------+---------------+
+1 row in set (0.00 sec)
+
+mysql> alter table employee_payroll add column phone long;
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table employee_payroll add column address varchar(50) default 'india';
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table employee_payroll add column department varchar(20) not null;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc employee_payroll'
+    '> ;
+    '> desc employee_payroll;
+    '> ^C
+mysql> desc employee_payroll;
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| Id         | int          | NO   | PRI | NULL    | auto_increment |
+| Name       | varchar(20)  | YES  |     | NULL    |                |
+| Salary     | double(10,3) | YES  |     | NULL    |                |
+| StartDate  | date         | YES  |     | NULL    |                |
+| gender     | varchar(20)  | YES  |     | NULL    |                |
+| phone      | mediumtext   | YES  |     | NULL    |                |
+| address    | varchar(50)  | YES  |     | india   |                |
+| department | varchar(20)  | NO   |     | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+8 rows in set (0.02 sec)
+
+mysql> create table EmployeeDepartment(empid int not null auto_increment primary key,deptid int not null );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> desc EmployeeDepartment;
++--------+------+------+-----+---------+----------------+
+| Field  | Type | Null | Key | Default | Extra          |
++--------+------+------+-----+---------+----------------+
+| empid  | int  | NO   | PRI | NULL    | auto_increment |
+| deptid | int  | NO   |     | NULL    |                |
++--------+------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> insert into EmployeeDepartment(depid) value(1000);
+ERROR 1054 (42S22): Unknown column 'depid' in 'field list'
+mysql> insert into EmployeeDepartment(deptid) value(1000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into EmployeeDepartment(deptid) value(1001);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into EmployeeDepartment(deptid) value(1002);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from EmployeeDepartment;
++-------+--------+
+| empid | deptid |
++-------+--------+
+|     1 |   1000 |
+|     2 |   1001 |
+|     3 |   1002 |
++-------+--------+
+3 rows in set (0.00 sec)
+
+mysql> delete from EmplyeeDepartment where emid=1;
+ERROR 1146 (42S02): Table 'payroll_service.emplyeedepartment' doesn't exist
+mysql> delete from EmplyeeDepartment where empid=1;
+ERROR 1146 (42S02): Table 'payroll_service.emplyeedepartment' doesn't exist
+mysql> delete from EmployeeDepartment where empid=1;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deductions,taxablepay,incomtax,netpay)values('Aditya','M',450000,12-01-22,8156899,'mumbai'12540,4520;255;390000)
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '12540,4520' at line 1
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '255' at line 1
+    -> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deductions,taxablepay,incomtax,netpay)values('Aditya','M',450000,12-01-22,8156899,'mumbai'12540,4520,255,390000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '390000)
+insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,' at line 1
+mysql> desc EmployeeDepartment
+    -> desc EmployeeDepartment;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'desc EmployeeDepartment' at line 2
+mysql> select * from employee_payroll;
++----+-------+------------+------------+--------+-------+---------+------------+
+| Id | Name  | Salary     | StartDate  | gender | phone | address | department |
++----+-------+------------+------------+--------+-------+---------+------------+
+|  1 | Sneha | 200000.000 | 2021-03-19 | NULL   | NULL  | india   |
+   |
+|  2 | Nagar | 300000.000 | 2020-06-26 | NULL   | NULL  | india   |
+   |
+|  3 | Amit  | 300000.000 | 2019-07-26 | NULL   | NULL  | india   |
+   |
+|  4 | Sneha | 200000.000 | 2021-03-19 | F      | NULL  | india   |
+   |
+|  5 |  ^Car | 300000.000 | 2020-06-26 | M      | NULL  | india   |
+mysql> ^C
+mysql> ^Cit  | 300000.000 | 2019-07-26 | M      | NULL  | india   |
+mysql> ^C
+mysql> ^C----+------------+------------+--------+-------+---------+------------+
+mysql> ^C set (0.00 sec)
+mysql> ^C
+mysql> ^C
+mysql> alter table employee_payroll add column basicpay long;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table employee_payroll add column deduction int;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table employee_payroll add column taxable pay int;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'pay int' at line 1
+mysql> alter table employee_payroll add column taxablwpay int;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table employee_payroll add column incomeTax int;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table employee_payroll add column netpay int;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deductions,taxablepay,incomtax,netpay)values('Aditya','M',350000,21-12-22,81691547,'Mumbai','Civil',280000,20000,12500,12500,12500,350000)
+    -> ;
+ERROR 1054 (42S22): Unknown column 'deductions' in 'field list'
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Aditya','M',350000,21-12-22,81691547,'Mumbai','Civil',280000,20000,12500,12500,12500,350000)
+    -> ;
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Rahul','M',
+450000,21-12-21,81692547,'Mumbai','IT',380000,35000,22500,22500,22500,400000);
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Rahul','M',450000,21-12-21,81692547,'Mumbai','IT',380000,35000,22500,22500,400000);
+ERROR 1292 (22007): Incorrect date value: '-12' for column 'StartDate' at row 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Rahul','M',450000,21/12/21,81692547,'Mumbai','IT',380000,35000,22500,22500,400000);
+ERROR 1292 (22007): Incorrect date value: '0.083333333333333333' for column 'StartDate' at row 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Rahul','M',450000,21-12-21,81692547,'Mumbai','IT',380000,35000,22500,22500,400000);
+ERROR 1292 (22007): Incorrect date value: '-12' for column 'StartDate' at row 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Rahul','M',450000,21,81692547,'Mumbai','IT',380000,35000,22500,22500,400000);
+ERROR 1292 (22007): Incorrect date value: '21' for column 'StartDate' at row 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Rahul','M',450000,21-2-8,81692547,'Mumbai','IT',380000,35000,22500,22500,400000);
+ERROR 1292 (22007): Incorrect date value: '11' for column 'StartDate' at row 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Rahul','M',450000,21-11-8,81692547,'Mumbai','IT',380000,35000,22500,22500,400000);
+ERROR 1292 (22007): Incorrect date value: '2' for column 'StartDate' at row 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Rahul','M',450000,20-12-21,81692547,'Mumbai','IT',380000,35000,22500,22500,400000);
+ERROR 1292 (22007): Incorrect date value: '-13' for column 'StartDate' at row 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Rahul','M',450000,20-12-22,81692547,'Mumbai','IT',380000,35000,22500,22500,400000);
+ERROR 1292 (22007): Incorrect date value: '-14' for column 'StartDate' at row 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Rahul','M',450000,20-12-22,81692547,'Mumbai','IT',380000,35000,22500,22500,400000);
+ERROR 1292 (22007): Incorrect date value: '-14' for column 'StartDate' at row 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Rahul','M',450000,2021-12-22,81692547,'Mumbai','IT',380000,35000,22500,22500,400000);
+ERROR 1292 (22007): Incorrect date value: '1987' for column 'StartDate' at row 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Rahul','M',450000,'2021-12-22',81692547,'Mumbai','IT',380000,35000,22500,22500,400000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Aditya','M',350000,'21-12-22',81691547,'Mumbai','Civil',280000,20000,12500,12500,12500,350000)
+    -> ;
+ERROR 1136 (21S01): Column count doesn't match value count at row 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Aditya','M',350000,'21-12-22',81691547,'Mumbai','Civil',280000,20000,12500,12500,,350000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',350000)' at line 1
+mysql> insert into employee_payroll(Name,gender,Salary,StartDate,phone,address,department,basicpay,deduction,taxablwpay,incomeTax,netpay)values('Aditya','M',350000,'21-12-22',81691547,'Mumbai','Civil',280000,20000,12500,12500,350000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from employee-payroll;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-payroll' at line 1
+mysql> select * from employee_payroll;
++----+--------+------------+------------+--------+----------+---------+------------+----------+-----------+------------+-----------+--------+
+| Id | Name   | Salary     | StartDate  | gender | phone    | address | department | basicpay | deduction | taxablwpay | incomeTax | netpay |
++----+--------+------------+------------+--------+----------+---------+------------+----------+-----------+------------+-----------+--------+
+|  1 | Sneha  | 200000.000 | 2021-03-19 | NULL   | NULL     | india   |            | NULL     |      NULL |       NULL |      NULL |   NULL |
+|  2 | Nagar  | 300000.000 | 2020-06-26 | NULL   | NULL     | india   |            | NULL     |      NULL |       NULL |      NULL |   NULL |
+|  3 | Amit   | 300000.000 | 2019-07-26 | NULL   | NULL     | india   |            | NULL     |      NULL |       NULL |      NULL |   NULL |
+|  4 | Sneha  | 200000.000 | 2021-03-19 | F      | NULL     | india   |            | NULL     |      NULL |       NULL |      NULL |   NULL |
+|  5 | Nagar  | 300000.000 | 2020-06-26 | M      | NULL     | india   |            | NULL     |      NULL |       NULL |      NULL |   NULL |
+|  6 | Amit   | 300000.000 | 2019-07-26 | M      | NULL     | india   |            | NULL     |      NULL |       NULL |      NULL |   NULL |
+|  7 | Rahul  | 450000.000 | 2021-12-22 | M      | 81692547 | Mumbai  | IT         | 380000   |     35000 |      22500 |     22500 | 400000 |
+|  8 | Aditya | 350000.000 | 2021-12-22 | M      | 81691547 | Mumbai  | Civil      | 280000   |     20000 |      12500 |     12500 | 350000 |
++----+--------+------------+------------+--------+----------+---------+------------+----------+-----------+------------+-----------+--------+
+8 rows in set (0.00 sec)
+
+mysql> update employee_payroll set department= 'EXTC';
+Query OK, 8 rows affected (0.00 sec)
+Rows matched: 8  Changed: 8  Warnings: 0
+
+mysql> update employee_payroll set department= 'EXTC' where id>1;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 7  Changed: 0  Warnings: 0
+
+mysql> update employee_payroll set department= 'CS' where id>2;
+Query OK, 6 rows affected (0.00 sec)
+Rows matched: 6  Changed: 6  Warnings: 0
+
+mysql> update employee_payroll set department= 'text' where id=20;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> alter table employee_payroll modify salary int auto_increment;
+ERROR 1075 (42000): Incorrect table definition; there can be only one auto column and it must be defined as a key
+mysql> select * from employee_payroll;
++----+--------+------------+------------+--------+----------+---------+------------+----------+-----------+------------+-----------+--------+
+| Id | Name   | Salary     | StartDate  | gender | phone    | address | department | basicpay | deduction | taxablwpay | incomeTax | netpay |
++----+--------+------------+------------+--------+----------+---------+------------+----------+-----------+------------+-----------+--------+
+|  1 | Sneha  | 200000.000 | 2021-03-19 | NULL   | NULL     | india   | EXTC       | NULL     |      NULL |       NULL |      NULL |   NULL |
+|  2 | Nagar  | 300000.000 | 2020-06-26 | NULL   | NULL     | india   | EXTC       | NULL     |      NULL |       NULL |      NULL |   NULL |
+|  3 | Amit   | 300000.000 | 2019-07-26 | NULL   | NULL     | india   | CS         | NULL     |      NULL |       NULL |      NULL |   NULL |
+|  4 | Sneha  | 200000.000 | 2021-03-19 | F      | NULL     | india   | CS         | NULL     |      NULL |       NULL |      NULL |   NULL |
+|  5 | Nagar  | 300000.000 | 2020-06-26 | M      | NULL     | india   | CS         | NULL     |      NULL |       NULL |      NULL |   NULL |
+|  6 | Amit   | 300000.000 | 2019-07-26 | M      | NULL     | india   | CS         | NULL     |      NULL |       NULL |      NULL |   NULL |
+|  7 | Rahul  | 450000.000 | 2021-12-22 | M      | 81692547 | Mumbai  | CS         | 380000   |     35000 |      22500 |     22500 | 400000 |
+|  8 | Aditya | 350000.000 | 2021-12-22 | M      | 81691547 | Mumbai  | CS         | 280000   |     20000 |      12500 |     12500 | 350000 |
++----+--------+------------
